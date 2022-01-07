@@ -14,6 +14,8 @@ type Request struct {
 	Content string  `json:"content" binding:"must"`
 	Age     int     `json:"age" binding:"gt=20"`
 	Money   float64 `json:"money" binding:"gt=35.6"`
+	Type  int       `json:"type" binding:"in=66/33/3"`
+
 }
 
 //Check 重写check,做一些定制操作

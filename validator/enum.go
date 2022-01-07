@@ -16,12 +16,17 @@ const (
 	LT    ValidTag = "lt"
 	EQ    ValidTag = "eq"
 	GTE   ValidTag = "gte"
-	LTE   ValidTag = "LTE"
+	LTE   ValidTag = "lte"
+	IN    ValidTag="in"
+	NEQ   ValidTag="neq"
+	LEN  ValidTag="len"
+	MAX  ValidTag="max"
+	MIN ValidTag="min"
 )
 
 func GetValidTags() []ValidTag {
 	return []ValidTag{
-		Phone, Must, Mail, GT, LT, EQ, GTE, LTE,
+		Phone, Must, Mail, GT, LT, EQ, GTE, LTE,IN,MAX,MIN,LEN,
 	}
 }
 
@@ -45,10 +50,20 @@ func (e ValidTag) Message(field, param string) error {
 		return errors.New(fmt.Sprintf("[%s]必须小于%s", field, param))
 	case EQ:
 		return errors.New(fmt.Sprintf("[%s]必须等于%s", field, param))
+	case NEQ:
+		return errors.New(fmt.Sprintf("[%s]必须不等于%s", field, param))
 	case GTE:
 		return errors.New(fmt.Sprintf("[%s]必须大于等于%s", field, param))
 	case LTE:
 		return errors.New(fmt.Sprintf("[%s]必须小于等于%s", field, param))
+	case IN:
+		return errors.New(fmt.Sprintf("[%s]必须在%s之内", field, param))
+	case LEN:
+		return errors.New(fmt.Sprintf("[%s]长度必须等于%s", field, param))
+	case MAX:
+		return errors.New(fmt.Sprintf("[%s]最大长度等于%s", field, param))
+	case MIN:
+		return errors.New(fmt.Sprintf("[%s]最小长度等于%s", field, param))
 	default:
 		return nil
 	}
@@ -75,6 +90,16 @@ func (e ValidTag) ValidFunc() func(fl validator.FieldLevel) bool {
 		return lteStrategy
 	case Mail:
 		return mailStrategy
+	case IN:
+		return inStrategy
+	case NEQ:
+		return neqStrategy
+	case LEN:
+		return lenStrategy
+	case MAX:
+		return maxStrategy
+	case MIN:
+		return minStrategy
 	default:
 		return nil
 

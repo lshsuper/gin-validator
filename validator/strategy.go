@@ -59,6 +59,11 @@ func ltStrategy(fl validator.FieldLevel) bool {
 
 func eqStrategy(fl validator.FieldLevel) bool {
 
+
+	if in, ok := fl.Field().Interface().(string); ok {
+		return in!=fl.Param()
+	}
+
 	if n, ok := fl.Field().Interface().(int); ok {
 		gtNum, _ := strconv.Atoi(fl.Param())
 		return n == gtNum
@@ -107,3 +112,92 @@ func mailStrategy(fl validator.FieldLevel) bool {
 	}
 	return false
 }
+
+func inStrategy(fl validator.FieldLevel)bool  {
+	if in, ok := fl.Field().Interface().(string); ok {
+		return strings.Contains(fl.Param(),in)
+	}
+
+	if in, ok := fl.Field().Interface().(int); ok {
+		return strings.Contains(fl.Param(),strconv.Itoa(in))
+	}
+
+	return false
+}
+
+func neqStrategy(fl validator.FieldLevel) bool {
+
+	if in, ok := fl.Field().Interface().(string); ok {
+		return in!=fl.Param()
+	}
+
+	if n, ok := fl.Field().Interface().(int); ok {
+		gtNum, _ := strconv.Atoi(fl.Param())
+		return n != gtNum
+	}
+
+	if n, ok := fl.Field().Interface().(float64); ok {
+		gtNum, _ := strconv.ParseFloat(fl.Param(), 10)
+		return n != gtNum
+	}
+	return false
+}
+
+func lenStrategy(fl validator.FieldLevel) bool {
+
+
+	n,err:=strconv.Atoi(fl.Param())
+	if err!=nil{
+		return false
+	}
+
+	if in, ok := fl.Field().Interface().(string); ok {
+		return len([]rune(in))==n
+	}
+
+	if i, ok := fl.Field().Interface().(int); ok {
+
+		return len(strconv.Itoa(i))==n
+	}
+
+	return false
+}
+
+
+func maxStrategy(fl validator.FieldLevel) bool {
+
+
+	n,err:=strconv.Atoi(fl.Param())
+	if err!=nil{
+		return false
+	}
+
+	if in, ok := fl.Field().Interface().(string); ok {
+		return len([]rune(in))<=n
+	}
+
+	if i, ok := fl.Field().Interface().(int); ok {
+		return len(strconv.Itoa(i))<=n
+	}
+
+	return false
+}
+func minStrategy(fl validator.FieldLevel) bool {
+
+
+	n,err:=strconv.Atoi(fl.Param())
+	if err!=nil{
+		return false
+	}
+
+	if in, ok := fl.Field().Interface().(string); ok {
+		return len([]rune(in))>=n
+	}
+
+	if i, ok := fl.Field().Interface().(int); ok {
+		return len(strconv.Itoa(i))>=n
+	}
+
+	return false
+}
+
